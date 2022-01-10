@@ -17,7 +17,7 @@ h1 {
   font-size: 70px;
 }
 
-.flexbox{
+.flexbox {
   display: flex;
   flex-direction: column;
 
@@ -50,5 +50,5 @@ h1 {
 
 .button:hover{
   border-style: none;
-  background-color: #DEDEDE;
+  background-color: #CECECE;
 }
