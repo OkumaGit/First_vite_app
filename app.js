@@ -1,31 +1,69 @@
-var add = document.querySelector('add');
-var del = document.querySelector('del');
+const app = document.getElementById('app')
+const box = document.getElementById('box')
+const booksKey = 'books', booksSeparator = '|||'
 
-console.log(add)
+box.onmousedown = function (e) {
+  const { target } = e
 
-console.log('app.js attached')
+  if (!(target instanceof HTMLParagraphElement))
+    return
 
-function onClick() {
-  console.log('element clicked 🎉🎉🎉');
+  target.onblur = () => {
+    target.contentEditable = false
+    save()
+  }
+
+  target.contentEditable = true
 }
 
+app.onclick = function (e) {
+  const { target } = e
 
-// const el = document.createElement('div');
-// el.addEventListener('click', function handleClick(event) {
-//   console.log('element clicked 🎉🎉🎉', event);
-// });
+  if (!(target instanceof HTMLInputElement))
+    return
 
-// el.textContent = 'Hello world';
-// el.style.backgroundColor = 'salmon';
-// el.style.width = '150px';
-// el.style.height = '150px';
+  if (target.type != 'button')
+    return
 
-// function onClick() {
-// 	console.log('Hello')
-// 	}
+  const { value } = target
 
-// const box = document.getElementById('box');
-// // box.appendChild(el);
+  if (value == 'add') {
+    addBook('New book')
+    save()
+  }
 
+  if (value == 'del') {
+    delBook()
+    save()
+  }
+}
 
+function addBook(input = '') {
+  const p = document.createElement('p')
+  p.innerText = input
+  box.appendChild(p)
+}
 
+function delBook() {
+  box.querySelector('p')?.remove()
+}
+
+function restore() {
+  const data = localStorage.getItem(booksKey) || ''
+  const dataSplit = data.split(booksSeparator)
+    .map(e => e.trim())
+    .filter(e => e)
+
+  for (let book of dataSplit)
+    addBook(book)
+}
+
+function save() {
+  const books = [...box.querySelectorAll('p')].map(e => {
+    return e.innerText
+  })
+
+  localStorage.setItem(booksKey, books.join(booksSeparator))
+}
+
+restore()
